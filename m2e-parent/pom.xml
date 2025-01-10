@@ -163,7 +163,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-clean-plugin</artifactId>
-					<version>3.2.0</version>
+					<version>3.4.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
@@ -199,15 +199,6 @@
 						</dependency>
 					</dependencies>
 				</plugin>
-				<plugin>
-					<groupId>org.eclipse.cbi.maven.plugins</groupId>
-					<artifactId>eclipse-jarsigner-plugin</artifactId>
-					<version>1.3.4</version>
-					<configuration>
-						<excludeInnerJars>true</excludeInnerJars>
-						<resigningStrategy>DO_NOT_RESIGN</resigningStrategy>
-					</configuration>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -221,20 +212,26 @@
 
 	<profiles>
 		<profile>
-			<id>eclipse-sign</id>
+			<id>windows</id>
+			<activation>
+				<os>
+					<family>windows</family>
+				</os>
+			</activation>
+			<properties>
+				<!-- The Tycho baselinging does not yet work well on Windows.
+				Temporarily skip it until it is fixed.-->
+				<tycho.baseline.skip>true</tycho.baseline.skip>
+			</properties>
 			<build>
 				<plugins>
 					<plugin>
-						<groupId>org.eclipse.cbi.maven.plugins</groupId>
-						<artifactId>eclipse-jarsigner-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>sign</id>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>tycho-p2-plugin</artifactId>
+						<version>${tycho-version}</version>
+						<configuration>
+							<baselineMode>warn</baselineMode>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>
